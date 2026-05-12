@@ -3,6 +3,7 @@ import { useWeather } from '../hooks';
 
 export default function WeatherProvider({ children }) {
   const { weatherData, error, loading } = useWeather();
+
   return (
     <WeatherContext value={{ weatherData, error, loading }}>
       {children}

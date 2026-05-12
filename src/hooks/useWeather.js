@@ -30,6 +30,15 @@ const useWeather = () => {
         message: 'Fetching weather data...',
       });
 
+      // Find out specific city name with Geocoding API
+      const geoResponse = await fetch(
+        `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${import.meta.env.VITE_WEATHER_API_KEY}`,
+      );
+
+      const geoData = await geoResponse.json();
+
+      const cityName = geoData[0]?.name || 'Unknown';
+
       const response = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${import.meta.env.VITE_WEATHER_API_KEY}&units=metric`,
       );
@@ -43,14 +52,14 @@ const useWeather = () => {
 
       const updateWeatherData = {
         ...weatherData,
-        location: data?.name,
+        location: cityName,
         climate: data?.weather[0]?.main,
         temperature: data?.main?.temp,
         maxTemperature: data?.main?.temp_max,
         minTemperature: data?.main?.temp_min,
         humidity: data?.main?.humidity,
         cloudPercentage: data?.clouds?.all,
-        wind: data?.main?.speed,
+        wind: data?.wind?.speed,
         time: data?.dt,
         longitude: longitude,
         latitude: latitude,
@@ -71,11 +80,21 @@ const useWeather = () => {
   useEffect(() => {
     setLoading({
       state: true,
-      message: 'Finding location',
+      message: 'Finding location...',
     });
-    navigator.geolocation.getCurrentPosition(function (position) {
-      fetchWeatherData(position.coords.latitude, position.coords.longitude);
-    });
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        fetchWeatherData(position.coords.latitude, position.coords.longitude);
+      },
+      (err) => {
+        setError(err);
+        setLoading({
+          state: false,
+          message: '',
+        });
+      },
+    );
   }, []);
 
   return {
