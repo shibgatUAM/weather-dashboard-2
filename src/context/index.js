@@ -1,8 +1,9 @@
 import { createContext, useContext } from 'react';
 
 const WeatherContext = createContext(null);
+const FavouriteContext = createContext(null);
 
-export function useWeatherContext() {
+function useWeatherContext() {
   const context = useContext(WeatherContext);
 
   if (!context) {
@@ -12,4 +13,21 @@ export function useWeatherContext() {
   return context;
 }
 
-export { WeatherContext };
+function useFavouriteContext() {
+  const context = useContext(FavouriteContext);
+
+  if (!context) {
+    throw new Error(
+      'useFavouriteContext must be used within a FavouriteProvider',
+    );
+  }
+
+  return context;
+}
+
+export {
+  FavouriteContext,
+  useFavouriteContext,
+  useWeatherContext,
+  WeatherContext,
+};

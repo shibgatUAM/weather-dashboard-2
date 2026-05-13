@@ -1,0 +1,33 @@
+import { FavouriteContext } from '../context';
+import { useLocalStorage } from '../hooks';
+
+export default function FavouriteProvider({ children }) {
+  const [favourites, setFavourites] = useLocalStorage('favourites', []);
+
+  const addToFavourites = (latitude, longitude, location) => {
+    setFavourites([
+      ...favourites,
+      {
+        latitude,
+        longitude,
+        location,
+      },
+    ]);
+  };
+
+  const removeFromFavourites = (location) => {
+    const restFavourites = favourites.filter(
+      (fav) => fav.location !== location,
+    );
+
+    setFavourites(restFavourites);
+  };
+
+  return (
+    <FavouriteContext
+      value={{ favourites, addToFavourites, removeFromFavourites }}
+    >
+      {children}
+    </FavouriteContext>
+  );
+}
