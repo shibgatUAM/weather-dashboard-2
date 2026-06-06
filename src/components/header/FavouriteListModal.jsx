@@ -1,7 +1,8 @@
-import { useFavouriteContext } from '../../context';
+import { useFavouriteContext, useLocationContext } from '../../context';
 
 export default function FavouriteListModal() {
   const { favourites } = useFavouriteContext();
+  const { setSelectedLocation } = useLocationContext();
 
   return (
     <div className="max-w-xs py-4 bg-white rounded-md border border-gray-200 absolute right-0 top-16 text-black shadow-lg z-50">
@@ -14,7 +15,9 @@ export default function FavouriteListModal() {
               key={fav.location}
               className="hover:bg-gray-100 transition-colors"
             >
-              {fav.location}
+              <a onClick={() => setSelectedLocation({ ...fav })}>
+                {fav.location}
+              </a>
             </li>
           ))
         ) : (

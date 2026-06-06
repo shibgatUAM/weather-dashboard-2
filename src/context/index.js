@@ -2,6 +2,7 @@ import { createContext, useContext } from 'react';
 
 const WeatherContext = createContext(null);
 const FavouriteContext = createContext(null);
+const LocationContext = createContext(null);
 
 function useWeatherContext() {
   const context = useContext(WeatherContext);
@@ -25,9 +26,23 @@ function useFavouriteContext() {
   return context;
 }
 
+function useLocationContext() {
+  const context = useContext(LocationContext);
+
+  if (!context) {
+    throw new Error(
+      'useLocationContext must be used within a LocationProvider',
+    );
+  }
+
+  return context;
+}
+
 export {
   FavouriteContext,
+  LocationContext,
   useFavouriteContext,
+  useLocationContext,
   useWeatherContext,
   WeatherContext,
 };
